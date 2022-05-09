@@ -1,0 +1,25 @@
+### Create new todo item
+
+POST http://localhost:8080/api/v1/todos
+Content-Type: application/json
+
+{
+  "name": "Create plan"
+}
+
+### Get existing todo item by id
+GET http://localhost:8080/api/v1/todos/a9c3c199-9cc0-4de8-bd29-6d5b9999f526
+
+### Get all todos
+GET http://localhost:8080/api/v1/todos
+
+### Update existing todo
+GET http://localhost:8080/api/v1/todos/a9c3c199-9cc0-4de8-bd29-6d5b9999f526
+Content-Type: application/json
+
+{
+  "name" : "Fix it"
+}
+
+### Delete todo by id
+DELETE http://localhost:8080/api/v1/todos/a9c3c199-9cc0-4de8-bd29-6d5b9999f526
