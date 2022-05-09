@@ -6,3 +6,6 @@ spring:
     url: jdbc:postgresql://localhost:26257/demo
     username: root
     password:
+
+kafka:
+  host: localhost:9092
