@@ -1,11 +1,13 @@
---create database demo;
+create database demo;
 
 use demo;
 
 create table if not exists todo_item
 (
-    id   uuid not null primary key,
-    name varchar(255)
+    id      uuid        not null primary key,
+    name    varchar(255),
+    created timestamptz not null,
+    updated timestamptz not null
 );
 
 create table if not exists outbox

@@ -36,18 +36,22 @@ public class TodoServiceImpl implements TodoService {
     @Transactional(isolation = Isolation.SERIALIZABLE)
     @Override
     public TodoItem create(TodoItem todoItem) {
+
+        var now = ZonedDateTime.now();
+
         todoItem.setId(UUID.randomUUID());
+        todoItem.setCreated(now);
+        todoItem.setUpdated(now);
         var todo = todoItemRepository.save(todoItem);
 
-
-        var kafkaTodoItem = new KafkaTodoItemDto();
-        kafkaTodoItem.setName(todoItem.getName());
+        var kafkaTodoItem = KafkaTodoItemDto.of(todo);
 
         var outbox = new Outbox();
         outbox.setId(UUID.randomUUID());
         outbox.setAggregate(KafkaTodoItemDto.class.getName());
         outbox.setOperation(Operation.CREATE.name());
-        outbox.setTs(ZonedDateTime.now());
+        outbox.setTs(now);
+
         try {
             outbox.setMessage(objectMapper.writeValueAsString(kafkaTodoItem));
         } catch (JsonProcessingException e) {
@@ -56,7 +60,7 @@ public class TodoServiceImpl implements TodoService {
 
         outboxRepository.save(outbox);
 
-        kafkaTemplate.send("todos", kafkaTodoItem);
+        //kafkaTemplate.send("todos", kafkaTodoItem);
         return todoItemRepository.save(todoItem);
     }
 
