@@ -23,3 +23,7 @@ Content-Type: application/json
 
 ### Delete todo by id
 DELETE http://localhost:8080/api/v1/todos/a9c3c199-9cc0-4de8-bd29-6d5b9999f526
+
+###
+GET http://localhost:8083/connectors
+Content-Type: application/json
