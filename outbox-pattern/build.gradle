@@ -1,6 +1,7 @@
 plugins {
     id 'java'
     id 'org.springframework.boot' version '2.4.2'
+    id 'com.commercehub.gradle.plugin.avro' version '0.99.99'
 }
 
 apply plugin: 'io.spring.dependency-management'
@@ -23,6 +24,8 @@ dependencies {
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
     implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    implementation 'org.apache.avro:avro:1.11.0'
+    implementation 'io.confluent:kafka-avro-serializer:5.5.0'
 }
 
 test {

@@ -3,13 +3,14 @@ version: "3.9"
 services:
   cockroach:
     container_name: cockroach
-    image: cockroachdb/cockroach:v20.2.0
+    image: cockroachdb/cockroach:v21.2.0
     command: start-single-node --insecure
     ports:
       - "26257:26257"
       - "9080:8080"
     volumes:
       - "${PWD}/cockroach-data/roach1:/cockroach/cockroach-data"
+    restart: on-failure
 
   zookeeper:
     image: confluentinc/cp-zookeeper:5.5.0
@@ -17,6 +18,7 @@ services:
     environment:
       ZOOKEEPER_CLIENT_PORT: 32181
       ZOOKEEPER_TICK_TIME: 2000
+    restart: on-failure
 
   kafka:
     image: confluentinc/cp-kafka:5.5.0
@@ -35,17 +37,30 @@ services:
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+    restart: on-failure
+
+#  schema-registry:
+#    image: confluentinc/cp-schema-registry:5.5.0
+#    ports:
+#      - "8089:8089"
+#    environment:
+#      SCHEMA_REGISTRY_KAFKASTORE_CONNECTION_URL: 'zookeeper:32181'
+#      SCHEMA_REGISTRY_HOST_NAME: schema-registry
+#      SCHEMA_REGISTRY_LISTENERS: 'kafka-connector-cockroach:8083'
 
   kafka-ui:
     image: provectuslabs/kafka-ui
     container_name: kafka-ui
     ports:
       - "9081:8080"
-    restart: always
+    restart: unless-stopped
     environment:
       - KAFKA_CLUSTERS_0_NAME=local
       - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=kafka:29092
       - KAFKA_CLUSTERS_0_ZOOKEEPER=zookeeper:32181
+    depends_on:
+      - zookeeper
+      - kafka
 
   kafka-connector-cockroach:
     container_name: kafka-connector-cockroach
@@ -68,12 +83,7 @@ services:
       CONNECT_INTERNAL_KEY_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
       CONNECT_INTERNAL_VALUE_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
       CONNECT_REST_ADVERTISED_HOST_NAME: "localhost"
-      CONNECT_LOG4J_ROOT_LOGLEVEL: DEBUG
+      CONNECT_LOG4J_ROOT_LOGLEVEL: INFO
       CONNECT_PLUGIN_PATH: "/usr/share/java,/etc/kafka-connect/jars"
     volumes:
       - $PWD/jars:/etc/kafka-connect/jars
-
-
-
-
-
