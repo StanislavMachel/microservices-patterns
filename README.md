@@ -88,6 +88,8 @@ docker-compose run --rm kafka kafka-console-consumer --bootstrap-server kafka:29
 
 [pgwire: multiple active result sets (portals) not supported #40195](https://github.com/cockroachdb/cockroach/issues/40195?version=v21.2#issuecomment-870570351)
 
+[Connect to Apache Kafka running in Docker](https://www.baeldung.com/kafka-docker-connection)
+
 ```sh
 curl --location --request POST 'http://localhost:8083/connectors/' \
 --header 'Content-Type: application/json' \
