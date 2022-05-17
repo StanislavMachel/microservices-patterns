@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import outbox.pattern.outbox.Operation;
 import outbox.pattern.outbox.Outbox;
 import outbox.pattern.outbox.OutboxRepository;
+import outbox.pattern.todo.exceptions.NotFoundException;
 
 import java.time.ZonedDateTime;
 import java.util.List;

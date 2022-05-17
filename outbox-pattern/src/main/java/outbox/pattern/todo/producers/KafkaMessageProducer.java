@@ -1,4 +1,4 @@
-package outbox.pattern.todo.producer;
+package outbox.pattern.todo.producers;
 
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;

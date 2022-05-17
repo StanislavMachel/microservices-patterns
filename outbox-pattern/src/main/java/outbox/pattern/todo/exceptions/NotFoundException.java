@@ -1,4 +1,4 @@
-package outbox.pattern.todo;
+package outbox.pattern.todo.exceptions;
 
 import java.util.UUID;
 
