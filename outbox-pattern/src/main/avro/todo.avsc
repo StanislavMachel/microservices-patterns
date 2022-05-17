@@ -1,7 +1,7 @@
 {
   "namespace": "dev.machel.outbox.pattern.avro.schema",
   "type": "record",
-  "name": "Todo",
+  "name": "KafkaTodoItemDto",
   "fields": [
     {
       "name": "id",
@@ -14,21 +14,21 @@
       "name": "name",
       "type": "string"
     },
-//    {
-//      "name": "created",
-//      "type": {
-//        "type": "long",
-//        "logicalType": "timestamp-millis"
-//      },
-//      "default": 0
-//    },
-//    {
-//      "name": "updated",
-//      "type": {
-//        "type": "long",
-//        "logicalType": "timestamp-millis"
-//      },
-//      "default": 0
-//    }
+    {
+      "name": "created",
+      "type": {
+        "type": "long",
+        "logicalType": "timestamp-millis"
+      },
+      "default": 0
+    },
+    {
+      "name": "updated",
+      "type": {
+        "type": "long",
+        "logicalType": "timestamp-millis"
+      },
+      "default": 0
+    }
   ]
 }

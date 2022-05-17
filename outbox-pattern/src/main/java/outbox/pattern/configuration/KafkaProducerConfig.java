@@ -19,7 +19,7 @@ public class KafkaProducerConfig {
 
     private final KafkaProperties kafkaProperties;
     @Value(value = "${kafka.host}")
-    private String kafkaHost;
+    private       String          kafkaHost;
 
     public KafkaProducerConfig(KafkaProperties kafkaProperties) {
         this.kafkaProperties = kafkaProperties;
@@ -31,6 +31,7 @@ public class KafkaProducerConfig {
         configProps.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaProperties.getHost());
         configProps.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         configProps.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
+//        configProps.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, KafkaAvroSerializer.class);
         return new DefaultKafkaProducerFactory<>(configProps);
     }
 
@@ -38,4 +39,5 @@ public class KafkaProducerConfig {
     public KafkaTemplate<String, KafkaTodoItemDto> todoKafkaTemplate(ProducerFactory<String, KafkaTodoItemDto> producerFactory) {
         return new KafkaTemplate<>(producerFactory);
     }
+
 }

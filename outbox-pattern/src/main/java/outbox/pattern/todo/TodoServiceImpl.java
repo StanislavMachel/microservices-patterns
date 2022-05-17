@@ -38,10 +38,10 @@ public class TodoServiceImpl implements TodoService {
 
         var todo = todoItemRepository.save(todoItem);
 
-        var kafkaTodoItem = KafkaTodoItemDto.of(todo);
+        var kafkaTodoItemDto = KafkaTodoItemDto.of(todo);
 
-        var outbox = Outbox.of(kafkaTodoItem, Operation.CREATE);
-        outbox.setMessage(serialize(kafkaTodoItem));
+        var outbox = Outbox.of(kafkaTodoItemDto, Operation.CREATE);
+        outbox.setMessage(serialize(kafkaTodoItemDto));
         outboxRepository.save(outbox);
 
         var createdTodoItem = todoItemRepository.save(todoItem);
@@ -65,7 +65,7 @@ public class TodoServiceImpl implements TodoService {
                                      todo.setName(todoRequest.getName());
                                      todo.setUpdated(ZonedDateTime.now());
 
-                                     KafkaTodoItemDto kafkaTodoItemDto = KafkaTodoItemDto.of(todo);
+                                     var kafkaTodoItemDto = KafkaTodoItemDto.of(todo);
 
                                      Outbox outbox = Outbox.of(kafkaTodoItemDto, Operation.UPDATE);
                                      outbox.setMessage(serialize(kafkaTodoItemDto));

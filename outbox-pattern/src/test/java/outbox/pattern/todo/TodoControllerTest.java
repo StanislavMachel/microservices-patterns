@@ -12,7 +12,7 @@ import org.springframework.http.ResponseEntity;
 
 import java.time.ZonedDateTime;
 import java.util.UUID;
-
+@Disabled
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class TodoControllerTest {
 

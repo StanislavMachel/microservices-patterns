@@ -66,6 +66,15 @@ public class Outbox {
         return outbox;
     }
 
+//    public static Outbox of(dev.machel.outbox.pattern.avro.schema.KafkaTodoItemDto kafkaTodoItemDto, Operation operation){
+//        var outbox = new Outbox();
+//        outbox.setId(UUID.randomUUID());
+//        outbox.setAggregate(KafkaTodoItemDto.class.getName());
+//        outbox.setOperation(operation.name());
+//        outbox.setTs(ZonedDateTime.now());
+//        return outbox;
+//    }
+
 
 
 }
