@@ -58,4 +58,14 @@ public class TodoResponse {
         return todoResponse;
     }
 
+    @Override
+    public String toString() {
+        return "TodoResponse{" +
+                   "id=" + id +
+                   ", name='" + name + '\'' +
+                   ", created=" + created +
+                   ", updated=" + updated +
+                   '}';
+    }
+
 }

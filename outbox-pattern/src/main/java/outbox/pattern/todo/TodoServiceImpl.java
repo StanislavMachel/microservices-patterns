@@ -52,7 +52,7 @@ public class TodoServiceImpl implements TodoService {
         try {
             return objectMapper.writeValueAsString(o);
         } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
+            throw new SerializationException(e);
         }
     }
 
@@ -81,15 +81,15 @@ public class TodoServiceImpl implements TodoService {
     public TodoResponse findById(UUID id) {
         return todoItemRepository.findById(id)
                                  .map(TodoResponse::of)
-                                 .orElseThrow(IllegalStateException::new);
+                                 .orElseThrow(() -> new NotFoundException(id, TodoItem.class));
     }
 
     @Override
     public List<TodoResponse> findAll() {
         return todoItemRepository.findAll()
-                   .stream()
-                   .map(TodoResponse::of)
-                   .collect(Collectors.toList());
+                                 .stream()
+                                 .map(TodoResponse::of)
+                                 .collect(Collectors.toList());
     }
 
     @Transactional(isolation = Isolation.SERIALIZABLE)
