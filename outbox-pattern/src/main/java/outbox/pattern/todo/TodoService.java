@@ -5,13 +5,13 @@ import java.util.UUID;
 
 public interface TodoService {
 
-    TodoItem create(TodoItem todoItem);
+    TodoResponse create(TodoRequest todoRequest);
 
-    TodoItem update(UUID id, TodoItem todoItemDto);
+    TodoResponse update(UUID id, TodoRequest todoRequest);
 
-    TodoItem findById(UUID id);
+    TodoResponse findById(UUID id);
 
-    List<TodoItem> findAll();
+    List<TodoResponse> findAll();
 
     void deleteById(UUID id);
 

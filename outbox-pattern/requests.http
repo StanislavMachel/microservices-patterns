@@ -8,7 +8,7 @@ Content-Type: application/json
 }
 
 ### Get existing todo item by id
-GET http://localhost:8080/api/v1/todos/a9c3c199-9cc0-4de8-bd29-6d5b9999f526
+GET http://localhost:8080/api/v1/todos/00024dc4-abb3-4aa5-8c1b-fb868fd19bbd
 
 ### Get all todos
 GET http://localhost:8080/api/v1/todos
@@ -22,8 +22,18 @@ Content-Type: application/json
 }
 
 ### Delete todo by id
-DELETE http://localhost:8080/api/v1/todos/a9c3c199-9cc0-4de8-bd29-6d5b9999f526
+DELETE http://localhost:8080/api/v1/todos/000910e4-6182-4c67-871f-5e74324bd63a
 
 ###
 GET http://localhost:8083/connectors
 Content-Type: application/json
+
+### Create new todo item
+
+PUT http://localhost:8080/api/v1/todos/0004fee0-65e4-4f5c-b8e1-440442c26c57
+Content-Type: application/json
+
+{
+  "name": "Test update"
+}
+

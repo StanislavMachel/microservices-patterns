@@ -2,15 +2,11 @@ package outbox.pattern.todo;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
 import java.time.ZonedDateTime;
 import java.util.UUID;
 
-@Entity
-public class TodoItem {
+public class TodoResponse {
 
-    @Id
     private UUID id;
 
     private String name;
@@ -53,14 +49,13 @@ public class TodoItem {
         this.updated = updated;
     }
 
-    public static TodoItem newTodoItemOf(TodoRequest todoRequest) {
-        var todoItem = new TodoItem();
-        todoItem.setName(todoRequest.getName());
-        var now = ZonedDateTime.now();
-        todoItem.setId(UUID.randomUUID());
-        todoItem.setCreated(now);
-        todoItem.setUpdated(now);
-        return todoItem;
+    public static TodoResponse of(TodoItem todoItem) {
+        var todoResponse = new TodoResponse();
+        todoResponse.setId(todoItem.getId());
+        todoResponse.setName(todoItem.getName());
+        todoResponse.setCreated(todoItem.getCreated());
+        todoResponse.setUpdated(todoItem.getUpdated());
+        return todoResponse;
     }
 
 }

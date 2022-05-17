@@ -1,5 +1,7 @@
 package outbox.pattern.outbox;
 
+import outbox.pattern.todo.KafkaTodoItemDto;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import java.time.ZonedDateTime;
@@ -54,5 +56,16 @@ public class Outbox {
     public void setTs(ZonedDateTime ts) {
         this.ts = ts;
     }
+
+    public static Outbox of(KafkaTodoItemDto kafkaTodoItemDto, Operation operation){
+        var outbox = new Outbox();
+        outbox.setId(UUID.randomUUID());
+        outbox.setAggregate(KafkaTodoItemDto.class.getName());
+        outbox.setOperation(operation.name());
+        outbox.setTs(ZonedDateTime.now());
+        return outbox;
+    }
+
+
 
 }

@@ -17,23 +17,23 @@ public class TodoController {
     }
 
     @GetMapping("/{id}")
-    public TodoItem getById(@PathVariable UUID id) {
+    public TodoResponse getById(@PathVariable UUID id) {
         return todoService.findById(id);
     }
 
     @GetMapping
-    public Iterable<TodoItem> getAll() {
+    public Iterable<TodoResponse> getAll() {
         return todoService.findAll();
     }
 
     @PostMapping
-    public TodoItem create(@RequestBody TodoItem todoItem) {
-        return todoService.create(todoItem);
+    public TodoResponse create(@RequestBody TodoRequest todoRequest) {
+        return todoService.create(todoRequest);
     }
 
     @PutMapping("/{id}")
-    public TodoItem update(@PathVariable UUID id, TodoItem todoItem) {
-        return todoService.update(id, todoItem);
+    public TodoResponse update(@PathVariable UUID id, @RequestBody TodoRequest todoRequest) {
+        return todoService.update(id, todoRequest);
     }
 
     @DeleteMapping("/{id}")
