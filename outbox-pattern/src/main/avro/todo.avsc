@@ -1,0 +1,34 @@
+{
+  "namespace": "dev.machel.outbox.pattern.avro.schema",
+  "type": "record",
+  "name": "Todo",
+  "fields": [
+    {
+      "name": "id",
+      "type": {
+        "type": "string",
+        "logicalType": "uuid"
+      }
+    },
+    {
+      "name": "name",
+      "type": "string"
+    },
+//    {
+//      "name": "created",
+//      "type": {
+//        "type": "long",
+//        "logicalType": "timestamp-millis"
+//      },
+//      "default": 0
+//    },
+//    {
+//      "name": "updated",
+//      "type": {
+//        "type": "long",
+//        "logicalType": "timestamp-millis"
+//      },
+//      "default": 0
+//    }
+  ]
+}

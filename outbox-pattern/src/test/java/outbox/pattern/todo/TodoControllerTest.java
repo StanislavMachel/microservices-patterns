@@ -33,8 +33,8 @@ class TodoControllerTest {
     @Test
     void create() {
     }
-    
-    @RepeatedTest(100000)
+
+    @RepeatedTest(4)
     void update(RepetitionInfo repetitionInfo) {
 
 
