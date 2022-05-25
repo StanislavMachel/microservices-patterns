@@ -6,6 +6,14 @@ spring:
     url: jdbc:postgresql://localhost:26257/demo
     username: root
     password:
+  kafka:
+    kafka:
+      properties:
+        schema.registry.url: "http://localhost:8081"
 
 kafka:
   host: localhost:9092
+
+outbox:
+  topic:
+    name: "kafka-connect-1-outbox"
