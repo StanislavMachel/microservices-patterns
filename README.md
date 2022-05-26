@@ -144,3 +144,11 @@ https://www.confluent.io/blog/schema-registry-avro-in-spring-boot-application-tu
 ```sh
 ./gradlew :outbox-pattern-consumer:bootRun
 ```
+
+
+    "transforms": "insertAppIdHeader, ExtractField",
+    "transforms.insertAppIdHeader.type": "org.apache.kafka.connect.transforms.InsertHeader",
+    "transforms.insertAppIdHeader.header": "entity.id",
+    "transforms.insertAppIdHeader.value.literal": "id",
+    "transforms.ExtractField.type": "org.apache.kafka.connect.transforms.ExtractField$Value",
+    "transforms.ExtractField.field": "id"

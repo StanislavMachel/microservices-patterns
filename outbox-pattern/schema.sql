@@ -12,11 +12,12 @@ create table if not exists todo_item
 
 create table if not exists outbox
 (
-    id        uuid        not null primary key,
-    operation varchar(255),
-    aggregate varchar(255),
-    message   varchar,
-    ts        timestamptz not null
+    id             uuid         not null primary key,
+    operation      varchar(255) not null,
+    aggregate_id   varchar(255) not null,
+    aggregate_type varchar(255) not null,
+    message        varchar      not null,
+    ts             timestamptz  not null
 );
 
 
