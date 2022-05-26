@@ -135,3 +135,12 @@ https://www.baeldung.com/spring-cloud-stream-kafka-avro-confluent
 https://www.baeldung.com/spring-kafka
 
 https://www.confluent.io/blog/schema-registry-avro-in-spring-boot-application-tutorial/
+
+
+```sh
+./gradlew :outbox-pattern:bootRun
+```
+
+```sh
+./gradlew :outbox-pattern-consumer:bootRun
+```

@@ -1,4 +1,4 @@
-package outbox.pattern.todo.consumers;
+package outbox.pattern.consumer;
 
 import dev.machel.kafka.connect.avro.Outbox;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
@@ -6,10 +6,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
-import outbox.pattern.configuration.KafkaConsumerConfig;
+import outbox.pattern.consumer.configuration.KafkaConsumerConfig;
 
-
-//@Component // unregistered not good for performance
+@Component
 public class MessageListener {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MessageListener.class);

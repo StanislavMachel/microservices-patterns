@@ -14,7 +14,7 @@ import outbox.pattern.todo.KafkaTodoItemDto;
 import java.util.HashMap;
 import java.util.Map;
 
-@Configuration
+//@Configuration //Other app will consume
 public class KafkaProducerConfig {
 
     private final KafkaProperties kafkaProperties;
