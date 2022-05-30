@@ -1,0 +1,15 @@
+server:
+  port: 8082
+
+spring:
+  kafka:
+    kafka:
+      properties:
+        schema.registry.url: "http://localhost:8081"
+
+kafka:
+  host: localhost:9092
+
+outbox:
+  topic:
+    name: "kafka-connect-1-outbox"

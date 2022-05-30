@@ -1,0 +1,8 @@
+{
+  "properties": [
+    {
+      "name": "kafka.host",
+      "type": "java.lang.String",
+      "description": "Description for kafka.host."
+  }
+] }

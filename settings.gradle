@@ -8,3 +8,6 @@
  */
 
 rootProject.name = 'microservices-patterns'
+include 'outbox-pattern'
+include 'outbox-pattern-consumer'
+
