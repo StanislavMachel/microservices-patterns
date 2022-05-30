@@ -16,7 +16,8 @@ public class MessageListener {
 
     @KafkaListener(topics = "${outbox.topic.name}", containerFactory = KafkaConsumerConfig.OUTBOX_KAFKA_LISTENER_CONTAINER_FACTORY_BEAN_NAME)
     public void outboxListener(ConsumerRecord<String, Outbox> message) {
-
-        LOGGER.info("Received outbox message {}: {}", message.key(), message.value());
+        final String key = message.key();
+        final Outbox value = message.value();
+        LOGGER.info("Received outbox message {}: {}", key, value);
     }
 }
