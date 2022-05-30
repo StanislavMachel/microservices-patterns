@@ -106,9 +106,11 @@ To fix it we can put `"batch.max.rows" : 10000000` in connector configuration.
 
 ## References
 
-[Spring for Apache Kafka® 101: Confluent Cloud Schema Registry and Spring Boot (Hands On)](https://www.youtube.com/watch?v=CyqaJTzeFD0&ab_channel=Confluent)
+[Kafka Connect Tutorial](https://docs.confluent.io/4.0.0/installation/docker/docs/tutorials/connect-avro-jdbc.html)
 
 [MySQL 8 Kafka Connect Tutorial on Docker](https://dev.to/cosmostail/mysql-8-kafka-connect-tutorial-on-docker-479p)
+
+[Spring for Apache Kafka® 101: Confluent Cloud Schema Registry and Spring Boot (Hands On)](https://www.youtube.com/watch?v=CyqaJTzeFD0&ab_channel=Confluent)
 
 [Kafka Connect Tutorial on Docker](https://docs.confluent.io/5.0.0/installation/docker/docs/installation/connect-avro-jdbc.html)
 
