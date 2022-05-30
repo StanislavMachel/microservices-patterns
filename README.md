@@ -1,94 +1,42 @@
 # microservices-patterns
-Microservices patterns
+Project for test and demo microservice patterns
 
 
-https://www.cockroachlabs.com/blog/message-queuing-database-kafka/#the-transactional-outbox-pattern
+## Transactional outbox pattern 
 
+Application *outbox-pattern* inserts todo item messages *outbox* table. Kafka connect plays role of *message relay*. Kafka connector reads messages from *outbox* table and publish them to message broker.
 
+Application *outbox-pattern-consumer* is simple kafka consumer. It reads messages from topic published by Kafka Connect source connector from outbox table to message broker topic.
 
-https://docs.confluent.io/platform/current/installation/docker/config-reference.html
-
-https://dev.to/cosmostail/mysql-8-kafka-connect-tutorial-on-docker-479p
-
-
-```sh
-curl -X POST \
-  -H "Content-Type: application/json" \
-  --data '{ "name": "quickstart-jdbc-source", "config": { "connector.class": "io.confluent.connect.jdbc.JdbcSourceConnector", "tasks.max": 1, "connection.url": "jdbc:mysql://mysql:3306/connect_test", "connection.user": "root", "connection.password": "test", "mode": "incrementing", "incrementing.column.name": "id", "timestamp.column.name": "modified", "topic.prefix": "quickstart-jdbc-", "poll.interval.ms": 1000 } }' \
-  http://localhost:8083/connectors
-```
-
-
+Run needed infrastructure
 
 ```sh
-curl -X POST \
- -H "Content-Type: application/json" \
- --data '{"name": "cockroach-source-todos", "config": { "connector.class": "io.confluent.connect.jdbc.JdbcSourceConnector", "tasks.max": 1, "connection.url": "jdbc:postgresql://localhost:26257/demo",    "connection.user": "root", "connection.password": "", "mode": "incrementing", "incrementing.column.name": "id", "timestamp.column.name": "modified", "topic": "todos-kafka-connect", "poll.interval.ms": 1000}}' \
-http://localhost:8083/connectors
+docker compose up -d
 ```
 
-
-curl -X PUT \
--H "Content-Type: application/json" \
---data '{ "connector.class": "io.confluent.connect.jdbc.JdbcSourceConnector", "tasks.max": 1, "connection.url": "jdbc:postgresql://localhost:26257/demo",    "connection.user": "root", "connection.password": "", "mode": "incrementing", "incrementing.column.name": "id", "timestamp.column.name": "modified", "topic": "todos-kafka-connect", "poll.interval.ms": 1000}' \
-http://localhost:8083/connectors/cockroach-source-todos/config
-
-
-curl -s -X GET http://localhost:28083/connectors/cockroach-source-todos/status
-
-
-curl -X PUT \
--H "Content-Type: application/json" \
---data '{ "connector.class": "io.confluent.connect.jdbc.JdbcSourceConnector", "tasks.max": 1, "connection.url": "jdbc:postgresql://cockroach:26257/demo",    "connection.user": "root", "mode": "incrementing", "incrementing.column.name": "id", "timestamp.column.name": "modified", "topic": "todos-kafka-connect", "poll.interval.ms": 1000}' \
-http://localhost:8083/connectors/cockroach-source-todos/config
-
-
-
-./cockroach sql --insecure
-docker exec -it cockroach bash
-
-
-
-docker-compose run --rm kafka kafka-console-consumer --bootstrap-server kafka:29092  --topic kafka-connect-1-outbox --from-beginning
-
-
-docker-compose run --rm kafka kafka-console-consumer --bootstrap-server kafka:29092  --topic kafka-connect-1-outbox --from-beginning --group kafka-console-consumer-todo-outbox
-
-
-https://github.com/cockroachdb/cockroach/issues/40195
-
-
-
-
-il.PSQLException: ERROR: unimplemented: multiple active portals not supported
-kafka-connector-cockroach  |   Detail: cannot perform operation sql.PrepareStmt while a different portal is open
-kafka-connector-cockroach  |   Hint: You have attempted to use a feature that is not yet implemented.
-kafka-connector-cockroach  | See: https://go.crdb.dev/issue-v/40195/v21.2. Attempting retry 102 of -1 attempts. (io.confluent.connect.jdbc.source.JdbcSourceTask)
-
-
-
-
-"batch.max.rows" : 10000000
-
-
-## Console consumer with consumer group
+Run *outbox-pattern* application:
 
 ```sh
-docker-compose run --rm kafka kafka-console-consumer --bootstrap-server kafka:29092  --topic kafka-connect-1-outbox --from-beginning --group kafka-console-consumer-todo-outbox
+./gradlew :outbox-pattern:bootRun
 ```
 
+Run *outbox-pattern-consumer* application
 
-## Useful links
+```sh
+./gradlew :outbox-pattern-consumer:bootRun
+```
 
-[Spring for Apache Kafka® 101: Confluent Cloud Schema Registry and Spring Boot (Hands On)](https://www.youtube.com/watch?v=CyqaJTzeFD0&ab_channel=Confluent)
+Command will create topic with 4 partitions before Kafka Connect source connector was created (by default kafka connect will create topic with 1 partition)
 
-[MySQL 8 Kafka Connect Tutorial on Docker](https://dev.to/cosmostail/mysql-8-kafka-connect-tutorial-on-docker-479p?utm_source=pocket_mylist)
+```
+docker-compose run --rm kafka kafka-topics --create --topic kafka-connect-1-outbox --partitions 4 --replication-factor 1 --if-not-exists --zookeeper zookeeper:32181 --config cleanup.policy=compact
+```
 
-[Kafka Connect Tutorial on Docker](https://docs.confluent.io/5.0.0/installation/docker/docs/installation/connect-avro-jdbc.html)
+## Kafka connect
 
-[pgwire: multiple active result sets (portals) not supported #40195](https://github.com/cockroachdb/cockroach/issues/40195?version=v21.2#issuecomment-870570351)
+### Create source connector
 
-[Connect to Apache Kafka running in Docker](https://www.baeldung.com/kafka-docker-connection)
+Create simple kafka jdbc source connector
 
 ```sh
 curl --location --request POST 'http://localhost:8083/connectors/' \
@@ -111,11 +59,14 @@ curl --location --request POST 'http://localhost:8083/connectors/' \
 }'
 ```
 
+Create simple kafka jdbc source connector with transformation (add custom headers and id)
 
 ```sh
-curl --location --request PUT 'http://localhost:8083/connectors/cockroach-source-todos-1/config' \
+curl --location --request POST 'http://localhost:8083/connectors/' \
 --header 'Content-Type: application/json' \
 --data-raw '{
+  "name": "cockroach-source-todos-1",
+  "config": {
     "connector.class": "io.confluent.connect.jdbc.JdbcSourceConnector",
     "mode": "timestamp",
     "timestamp.column.name": "ts",
@@ -126,29 +77,89 @@ curl --location --request PUT 'http://localhost:8083/connectors/cockroach-source
     "name": "cockroach-source-todos-1",
     "batch.max.rows": "10000000",
     "connection.url": "jdbc:postgresql://cockroach:26257/demo",
-    "table.whitelist": "outbox"
+    "table.whitelist": "outbox",
+    "transforms" : "moveValueFieldsToHeader, ValueToKey",
+    "transforms.moveValueFieldsToHeader.type": "org.apache.kafka.connect.transforms.HeaderFrom$Value",
+    "transforms.moveValueFieldsToHeader.fields" : "aggregate_id,aggregate_type",
+    "transforms.moveValueFieldsToHeader.headers" : "aggregate.id,aggregate.type",
+    "transforms.moveValueFieldsToHeader.operation" : "copy",
+    "transforms.ValueToKey.type": "org.apache.kafka.connect.transforms.ValueToKey",
+    "transforms.ValueToKey.fields": "id"
+  }
 }'
 ```
 
+## Known issues
 
-https://www.baeldung.com/spring-cloud-stream-kafka-avro-confluent
-https://www.baeldung.com/spring-kafka
+### Cockroach db and kafka connect
 
-https://www.confluent.io/blog/schema-registry-avro-in-spring-boot-application-tutorial/
+It is possible that before creating Kafka Connect source connector *outbox* table will contain a lot of records (10000+ rows) then after creating connector we will face following error:
 
+> PSQLException: ERROR: unimplemented: multiple active portals not supported
+kafka-connector-cockroach  |   Detail: cannot perform operation sql.PrepareStmt while a different portal is open
+kafka-connector-cockroach  |   Hint: You have attempted to use a feature that is not yet implemented.
+kafka-connector-cockroach  | See: https://go.crdb.dev/issue-v/40195/v21.2. Attempting retry 102 of -1 attempts. (io.confluent.connect.jdbc.source.JdbcSourceTask)
+
+Reason is know issue [pgwire: multiple active result sets (portals) not supported #40195](https://github.com/cockroachdb/cockroach/issues/40195)
+
+To fix it we can put `"batch.max.rows" : 10000000` in connector configuration.
+
+## References
+
+[Spring for Apache Kafka® 101: Confluent Cloud Schema Registry and Spring Boot (Hands On)](https://www.youtube.com/watch?v=CyqaJTzeFD0&ab_channel=Confluent)
+
+[MySQL 8 Kafka Connect Tutorial on Docker](https://dev.to/cosmostail/mysql-8-kafka-connect-tutorial-on-docker-479p)
+
+[Kafka Connect Tutorial on Docker](https://docs.confluent.io/5.0.0/installation/docker/docs/installation/connect-avro-jdbc.html)
+
+[pgwire: multiple active result sets (portals) not supported #40195](https://github.com/cockroachdb/cockroach/issues/40195?version=v21.2#issuecomment-870570351)
+
+[Connect to Apache Kafka running in Docker](https://www.baeldung.com/kafka-docker-connection)
+
+[The transactional outbox pattern](https://www.cockroachlabs.com/blog/message-queuing-database-kafka/#the-transactional-outbox-pattern)
+
+[Docker Configuration Parameters](https://docs.confluent.io/platform/current/installation/docker/config-reference.html)
+
+[Guide to Spring Cloud Stream with Kafka, Apache Avro and Confluent Schema Registry](https://www.baeldung.com/spring-cloud-stream-kafka-avro-confluent)
+
+[Intro to Apache Kafka with Spring](https://www.baeldung.com/spring-kafka)
+
+[How to Use Schema Registry and Avro in Spring Boot Applications](https://www.confluent.io/blog/schema-registry-avro-in-spring-boot-application-tutorial/)
+
+[Connect REST Interface](https://docs.confluent.io/platform/current/connect/references/restapi.html)
+
+[KIP-145 - Expose Record Headers in Kafka Connect](https://cwiki.apache.org/confluence/display/KAFKA/KIP-145+-+Expose+Record+Headers+in+Kafka+Connect)
+
+[Why is the key generated from Kafka JDBC Source Connector getting prefixed with an L?](https://stackoverflow.com/questions/66974611/why-is-the-key-generated-from-kafka-jdbc-source-connector-getting-prefixed-with)
+
+[Single Message Transforms for Confluent Platform](https://docs.confluent.io/platform/current/connect/transforms/overview.html)
+
+[ValueToKey](https://docs.confluent.io/platform/current/connect/transforms/valuetokey.html)
+
+[Reset Kafka Connect Source Connector Offsets](https://rmoff.net/2019/08/15/reset-kafka-connect-source-connector-offsets/)
+
+[Kafka Connect : JDBC Source Connector : create Topic with multiple partitions](https://stackoverflow.com/questions/54665050/kafka-connect-jdbc-source-connector-create-topic-with-multiple-partitions)
+
+[Introduction to Kafka Connectors](https://www.baeldung.com/kafka-connectors-guide)
+
+[How to Use Schema Registry and Avro in Spring Boot Applications](https://www.confluent.io/blog/schema-registry-avro-in-spring-boot-application-tutorial/)
+
+## Useful commands
+
+Console consumer with consumer group
 
 ```sh
-./gradlew :outbox-pattern:bootRun
+docker-compose run --rm kafka kafka-console-consumer --bootstrap-server kafka:29092  --topic kafka-connect-1-outbox --from-beginning --group kafka-console-consumer-todo-outbox
+```
+
+Execute bash in cockroach container
+
+```sh
+docker exec -it cockroach bash
 ```
 
 ```sh
-./gradlew :outbox-pattern-consumer:bootRun
+./cockroach sql --insecure
 ```
 
 
-    "transforms": "insertAppIdHeader, ExtractField",
-    "transforms.insertAppIdHeader.type": "org.apache.kafka.connect.transforms.InsertHeader",
-    "transforms.insertAppIdHeader.header": "entity.id",
-    "transforms.insertAppIdHeader.value.literal": "id",
-    "transforms.ExtractField.type": "org.apache.kafka.connect.transforms.ExtractField$Value",
-    "transforms.ExtractField.field": "id"
